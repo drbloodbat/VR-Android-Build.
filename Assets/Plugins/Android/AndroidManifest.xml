@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Custom main manifest for Android (CardboardXR).
+  Camera permissions/features required for MediaPipe and ARCore.
+  This file replaces Unity's default main manifest, so the <application>
+  block below must stay present for the app to launch.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Camera access for MediaPipe and ARCore -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- ARCore requires an AR-capable camera -->
+    <uses-feature android:name="android.hardware.camera.ar" android:required="true"/>
+
+    <application>
+        <activity android:name="com.unity3d.player.UnityPlayerActivity"
+                  android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+        </activity>
+    </application>
+
+</manifest>

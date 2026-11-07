@@ -1,0 +1,27 @@
+name: Build Android APK
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    name: Build Android
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+      - name: Cache Unity Library
+        uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-Android
+      - name: Build Unity Project
+        uses: game-ci/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: Android
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: VR-Android-Build
+          path: build/Android

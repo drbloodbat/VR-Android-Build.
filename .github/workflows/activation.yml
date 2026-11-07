@@ -6,29 +6,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Get alf file directly via Unity Hub
-        run: |
-          # Install Unity Hub
-          sudo sh -c 'echo "deb https://hub.unity3d.com/linux/repos/deb stable main" > /etc/apt/sources.list.d/unityhub.list'
-          wget -qO - https://hub.unity3d.com/linux/keys/public | sudo apt-key add -
-          sudo apt-get update
-          sudo apt-get install unityhub -y
-          
-          # Install specific Unity Version (replace 2022.3.17f1 with the project's version if different)
-          # We run a dummy batch mode command to force Unity to output the .alf file
-          mkdir -p /opt/unity
-          wget https://download.unity3d.com/download_unity/9c2cb2f5ea3e/UnitySetup-2022.3.17f1 -O UnitySetup
-          chmod +x UnitySetup
-          yes | ./UnitySetup --unattended --install-location=/opt/unity
-          
-          /opt/unity/Editor/Unity -batchmode -nographics -createManualActivationFile -logfile
-          
-          # Find and copy the alf file
-          cp *.alf Manual-Activation-File.alf
-          
+      - name: Request manual activation file
+        id: getManualAuthFile
+        uses: webbertakken/unity-request-activation-file@v2.1.2
       - name: Expose as artifact
         uses: actions/upload-artifact@v4
         with:
           name: Manual-Activation-File
-          path: Manual-Activation-File.alf
+          path: ${{ steps.getManualAuthFile.outputs.manualActivationFile }}
